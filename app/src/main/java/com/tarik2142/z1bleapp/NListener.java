@@ -410,7 +410,7 @@ public class NListener extends NotificationListenerService {
         }
         text = text.trim();
         text = text.replaceAll("\\p{Cntrl}", "");
-        title += ": ";
+        title += "\n";
         final int titleLen = title.length();
         final int textLen = text.length();
         String result = "";
@@ -486,7 +486,15 @@ public class NListener extends NotificationListenerService {
                 case TelephonyManager.CALL_STATE_RINGING:
                     if (!ringing){
                         ringing = true;
-                        callAlert(getContactName(incomingNumber, getBaseContext()));
+                        String contactName = getContactName(incomingNumber, getBaseContext());
+                        if (contactName != null){
+                            if (contactName.isEmpty()){//
+                                contactName = "Невідомий номер \n" + incomingNumber;//номера нет в списке контактов
+                            }
+                        }else {
+                            contactName = "Вхідний виклик";
+                        }
+                        callAlert(contactName);
                     }
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
